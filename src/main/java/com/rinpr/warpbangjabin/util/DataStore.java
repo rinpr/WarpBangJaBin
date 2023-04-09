@@ -5,11 +5,17 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TpaRequestStore {
+public class DataStore {
+
     /**
      * Store tpaRequest from requester to target.
      */
     private static Map<Player, Player> tpaRequest = new HashMap<>();
+
+    /**
+     * Store player's current page.
+     */
+    private static Map<Player, Integer> currentPage = new HashMap<>();
 
     /**
      * This static method use to add tpa request to global variables.
@@ -29,4 +35,23 @@ public class TpaRequestStore {
      * @param from requester.
      */
     public static Player getTpaRequest(Player from) { return tpaRequest.get(from); }
+
+    /**
+     * This static method use to add player's current page to global variables.
+     * @param player requester.
+     * @param page target.
+     */
+    public static void addCurrentPage(Player player, Integer page) { currentPage.put(player, page); }
+
+    /**
+     * This static method use to remove player's current page.
+     * @param player player you wanted to remove their current page.
+     */
+    public static void removeCurrentPage(Player player) { currentPage.remove(player); }
+
+    /**
+     * This static method use to get player's current page.
+     * @param player player you wanted to get their current page.
+     */
+    public static int getCurrentPage(Player player) { return currentPage.get(player); }
 }
