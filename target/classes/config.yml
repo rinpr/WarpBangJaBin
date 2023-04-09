@@ -1,0 +1,45 @@
+# This will keep the teleport request alive for X seconds
+keep-alive: 10
+# An instant teleport item
+teleport_item:
+  material: PAPER
+  name: "&cTP card"
+  customdata: 0
+# A teleport request item
+teleport_ask_item:
+  material: PAPER
+  name: "&cTPA card"
+  customdata: 0
+# A space slot
+space_slot:
+  material: LIGHT_GRAY_STAINED_GLASS_PANE
+  name: "&f"
+  customdata: 0
+# Player list configuration section
+player_list:
+  # Title name for player list (useful for custom gui)
+  title_name: "Player List"
+  # next button item data (useful for item's custom model data)
+  next:
+    material: ARROW
+    name: "&fNext"
+    customdata: 0
+  # previous button item data (useful for item's custom model data)
+  previous:
+    material: ARROW
+    name: "&fBack"
+    customdata: 0
+# Request title configuration section
+request_menu:
+  # Title name for request menu (useful for custom gui)
+  title_name: "Teleport request"
+  # accept button item data (useful for item's custom model data)
+  accept:
+    material: LIME_WOOL
+    name: "&aAccept"
+    customdata: 0
+  # deny button item data (useful for item's custom model data)
+  deny:
+    material: RED_WOOL
+    name: "&cDeny"
+    customdata: 0
