@@ -1,5 +1,6 @@
 package com.rinpr.warpbangjabin.Listener;
 
+import com.rinpr.warpbangjabin.WarpBangJaBin;
 import com.rinpr.warpbangjabin.gui.GUIhandler;
 import com.rinpr.warpbangjabin.util.DataStore;
 import com.rinpr.warpbangjabin.util.Message;
@@ -12,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,36 +21,87 @@ import java.util.List;
 import java.util.Objects;
 
 public class guiInteraction implements Listener {
+    private static final Plugin plugin = WarpBangJaBin.getPlugin(WarpBangJaBin.class);
     @EventHandler (priority = EventPriority.HIGHEST, ignoreCancelled = false)
     public void playerListHandler(InventoryClickEvent event) {
         List<Integer> list = new ArrayList<>();
         Collections.addAll(list, 10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34,37,38,39,40,41,42,43);
         Player player = (Player) event.getWhoClicked();
+
         int currentPage = DataStore.getCurrentPage(player);
+
         if (event.getClickedInventory() == null) return;
-        // check if the inventory is not an ordinary one
-        if (event.getView().getTitle().equals(fromConfig.getPlayerTitle()) || event.getView().getTitle().equals(fromConfig.getRequestTitle()) || event.getView().getTitle().equals(fromConfig.getRequestTitle() + " ")) { event.setCancelled(true); }
-        // to check if the player is clicking on player list slot or not if they do they will teleport to the owner of the skull
-        if (list.contains(event.getSlot()) && event.getCurrentItem() != null) {
-            String target_player = Objects.requireNonNull(Objects.requireNonNull(event.getCurrentItem()).getItemMeta()).getDisplayName();
-            event.getWhoClicked().teleport(Objects.requireNonNull(Bukkit.getServer().getPlayer(target_player)));
-            Message.send(event.getWhoClicked(), "You teleported to " + target_player);
-            event.getWhoClicked().closeInventory();
-        // next and previous button
-        } else if (event.getSlot() == 48 || event.getSlot() == 50 && event.getCurrentItem() != null) {
-            switch (event.getSlot()) {
-                case 48:
-                    if (currentPage >= 1 && currentPage != 1 && isTheresNextPage(currentPage)) {
-                        new GUIhandler(player).openTPgui(currentPage - 1);
-                        DataStore.updateCurrentPage(player, currentPage - 1);
+
+        // check if the inventory is a teleport and teleport request gui.
+        if (event.getView().getTitle().equals(fromConfig.getPlayerTitle()) ||  event.getView().getTitle().equals(fromConfig.getRequestTitle() + " ")) { event.setCancelled(true); }
+
+        // for teleport gui
+        if (event.getView().getTitle().equals(fromConfig.getPlayerTitle())) {
+            // to check if the player is clicking on player list slot or not if they do they will teleport to the owner of the skull
+            if (list.contains(event.getSlot()) && event.getCurrentItem() != null) {
+                Player target = Bukkit.getPlayer(Objects.requireNonNull(event.getCurrentItem().getItemMeta()).getDisplayName());
+                if (target == player) {
+                    event.setCancelled(true);
+                    return;
+                }
+                event.getWhoClicked().teleport(Objects.requireNonNull(Bukkit.getServer().getPlayer(target.getName())));
+                Message.send(event.getWhoClicked(), "You teleported to " + target.getName());
+                event.getWhoClicked().closeInventory();
+                // next and previous button.
+            } else if (event.getSlot() == 48 || event.getSlot() == 50 && event.getCurrentItem() != null) {
+                switch (event.getSlot()) {
+                    case 48:
+                        if (currentPage >= 1 && currentPage != 1 && isTheresNextPage(currentPage)) {
+                            new GUIhandler(player).openTPgui(currentPage - 1);
+                            DataStore.updateCurrentPage(player, currentPage - 1);
+                        }
+                        break;
+                    case 50:
+                        if (currentPage >= 1 && isTheresNextPage(currentPage)) {
+                            new GUIhandler(player).openTPgui(currentPage + 1);
+                            DataStore.updateCurrentPage(player, currentPage + 1);
+                        }
+                        break;
+                }
+            }
+            // for teleport request gui.
+        } else if (event.getView().getTitle().equals(fromConfig.getRequestTitle() + " ")) {
+            // to check if the player is clicking on player list slot or not if they do they will teleport to the owner of the skull
+            if (list.contains(event.getSlot()) && event.getCurrentItem() != null) {
+                Player target = Bukkit.getPlayer(Objects.requireNonNull(event.getCurrentItem().getItemMeta()).getDisplayName());
+                if (target == player) {
+                    event.setCancelled(true);
+                    return;
+                }
+                // tpa request logic here
+                DataStore.addTpaRequest(target, player);
+                Message.send(target, player.getName() + " send a teleport request to you");
+                // set tpa request timeout cool down.
+                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                    DataStore.removeTpaRequest(target);
+                    if (DataStore.getTpaRequest(target) != null) {
+                        Message.send(target, "&cYour teleport request timed out!");
                     }
-                    break;
-                case 50:
-                    if (currentPage >= 1 && isTheresNextPage(currentPage)) {
-                        new GUIhandler(player).openTPgui(currentPage + 1);
-                        DataStore.updateCurrentPage(player, currentPage + 1);
-                    }
-                    break;
+                }, 20L * fromConfig.getRequestKeepalive());
+
+                Message.send(event.getWhoClicked(), "You send a teleport request to " + Objects.requireNonNull(target).getDisplayName());
+                event.getWhoClicked().closeInventory();
+                // next and previous button.
+            } else if (event.getSlot() == 48 || event.getSlot() == 50 && event.getCurrentItem() != null) {
+                switch (event.getSlot()) {
+                    case 48:
+                        if (currentPage >= 1 && currentPage != 1 && isTheresNextPage(currentPage)) {
+                            new GUIhandler(player).openTPgui(currentPage - 1);
+                            DataStore.updateCurrentPage(player, currentPage - 1);
+                        }
+                        break;
+                    case 50:
+                        if (currentPage >= 1 && isTheresNextPage(currentPage)) {
+                            new GUIhandler(player).openTPgui(currentPage + 1);
+                            DataStore.updateCurrentPage(player, currentPage + 1);
+                        }
+                        break;
+                }
             }
         }
     }
