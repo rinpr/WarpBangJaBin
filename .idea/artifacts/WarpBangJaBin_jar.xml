@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="WarpBangJaBin:jar">
-    <output-path>$PROJECT_DIR$/../../Minecraft Files/@Server/1.19.3 Server/plugins</output-path>
-    <root id="archive" name="WarpBangJaBin.jar">
-      <element id="module-output" name="WarpBangJaBin" />
-    </root>
-  </artifact>
-</component>
