@@ -52,6 +52,14 @@ public class DataStore {
     /**
      * This static method use to get player's current page.
      * @param player player you wanted to get their current page.
+     * @return The player's current page or -1 If there's no value
      */
-    public static int getCurrentPage(Player player) { return currentPage.get(player); }
+    public static int getCurrentPage(Player player) { return currentPage.getOrDefault(player, -1); }
+
+    /**
+     * This static method use to update player's current page.
+     * @param player player you wanted to update their new current page.
+     * @param page new page you wanted to update to.
+     */
+    public static void updateCurrentPage(Player player, Integer page) { currentPage.replace(player, page); }
 }
