@@ -43,7 +43,7 @@ public class GUIhandler {
      * @param pageNum page number you want to open for this gui
      */
     public void openTPAgui(int pageNum) {
-        Inventory inv = Bukkit.createInventory(player, 54, fromConfig.getRequestTitle() + " ");
+        Inventory inv = Bukkit.createInventory(player, 54, fromConfig.getRequestTitle());
         inv.setItem(48, fromConfig.getPreviousButton());
         inv.setItem(50, fromConfig.getNextButton());
         for (int slot : space_slot) { inv.setItem(slot,fromConfig.getSpaceSlot()); }

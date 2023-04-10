@@ -2,6 +2,7 @@ package com.rinpr.warpbangjabin.Listener;
 
 import com.rinpr.warpbangjabin.WarpBangJaBin;
 import com.rinpr.warpbangjabin.gui.GUIhandler;
+import com.rinpr.warpbangjabin.util.ClickMessage;
 import com.rinpr.warpbangjabin.util.DataStore;
 import com.rinpr.warpbangjabin.util.Message;
 import com.rinpr.warpbangjabin.util.fromConfig;
@@ -33,7 +34,7 @@ public class guiInteraction implements Listener {
         if (event.getClickedInventory() == null) return;
 
         // check if the inventory is a teleport and teleport request gui.
-        if (event.getView().getTitle().equals(fromConfig.getPlayerTitle()) ||  event.getView().getTitle().equals(fromConfig.getRequestTitle() + " ")) { event.setCancelled(true); }
+        if (event.getView().getTitle().equals(fromConfig.getPlayerTitle()) ||  event.getView().getTitle().equals(fromConfig.getRequestTitle())) { event.setCancelled(true); }
 
         // for teleport gui
         if (event.getView().getTitle().equals(fromConfig.getPlayerTitle())) {
@@ -65,7 +66,7 @@ public class guiInteraction implements Listener {
                 }
             }
             // for teleport request gui.
-        } else if (event.getView().getTitle().equals(fromConfig.getRequestTitle() + " ")) {
+        } else if (event.getView().getTitle().equals(fromConfig.getRequestTitle())) {
             // to check if the player is clicking on player list slot or not if they do they will teleport to the owner of the skull
             if (list.contains(event.getSlot()) && event.getCurrentItem() != null) {
                 Player target = Bukkit.getPlayer(Objects.requireNonNull(event.getCurrentItem().getItemMeta()).getDisplayName());
@@ -75,13 +76,14 @@ public class guiInteraction implements Listener {
                 }
                 // tpa request logic here
                 DataStore.addTpaRequest(target, player);
-                Message.send(target, player.getName() + " send a teleport request to you");
+                ClickMessage.sendTPA(target, player);
+//                Message.send(target, player.getName() + " send a teleport request to you");
                 // set tpa request timeout cool down.
                 Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                    DataStore.removeTpaRequest(target);
                     if (DataStore.getTpaRequest(target) != null) {
                         Message.send(target, "&cYour teleport request timed out!");
                     }
+                    DataStore.removeTpaRequest(target);
                 }, 20L * fromConfig.getRequestKeepalive());
 
                 Message.send(event.getWhoClicked(), "You send a teleport request to " + Objects.requireNonNull(target).getDisplayName());
