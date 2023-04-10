@@ -1,6 +1,7 @@
 package com.rinpr.warpbangjabin.Listener;
 
 import com.rinpr.warpbangjabin.gui.GUIhandler;
+import com.rinpr.warpbangjabin.util.DataStore;
 import com.rinpr.warpbangjabin.util.Message;
 import com.rinpr.warpbangjabin.util.fromConfig;
 import org.bukkit.entity.Player;
@@ -10,7 +11,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class UseTeleport implements Listener {
+public class TeleportToggle implements Listener {
 
     @EventHandler
     public void useWarpItem(PlayerInteractEvent event) {
@@ -20,6 +21,7 @@ public class UseTeleport implements Listener {
             if (user.getInventory().getItemInMainHand().isSimilar(fromConfig.getTPItem())) {
                 Message.send(user, "Opening teleport gui.");
                 new GUIhandler(user).openTPgui(1);
+                DataStore.addCurrentPage(user, 1);
                 if (in_hand.getAmount() > 1) {
                     in_hand.setAmount(in_hand.getAmount() - 1); }
                 else { user.setItemInHand(null); }
