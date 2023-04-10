@@ -19,14 +19,16 @@ public class WarpTabComplete implements TabCompleter {
         List<String> completions = new ArrayList<>();
         List<String> argument = new ArrayList<>();
         if (args.length == 1) {
-            argument.add("givetp");
-            argument.add("givetpa");
-            argument.add("reload");
+            if (commandSender.hasPermission("warpbangjabin.admin")) {
+                argument.add("givetp");
+                argument.add("givetpa");
+                argument.add("reload");
+            }
             StringUtil.copyPartialMatches(args[0], argument, completions);
             Collections.sort(completions);
         } else if (args.length == 2 & !Objects.equals(args[0], "reload")) {
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                argument.add(p.getName());
+            if (commandSender.hasPermission("warpbangjabin.admin")) {
+                for (Player p : Bukkit.getOnlinePlayers()) { argument.add(p.getName()); }
             }
             StringUtil.copyPartialMatches(args[1], argument, completions);
         }

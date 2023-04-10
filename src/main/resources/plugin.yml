@@ -4,6 +4,8 @@ main: com.rinpr.warpbangjabin.WarpBangJaBin
 api-version: 1.19
 commands:
   WarpBangJaBin:
+    permission: warpbangjabin.admin
+    permission-message: You don't have permission to use this command
     aliases: wbjb
     description: Main command for WarpBangJaBin plugin
   debug-command:
