@@ -41,6 +41,7 @@ public class guiInteraction implements Listener {
             // to check if the player is clicking on player list slot or not if they do they will teleport to the owner of the skull
             if (list.contains(event.getSlot()) && event.getCurrentItem() != null) {
                 Player target = Bukkit.getPlayer(Objects.requireNonNull(event.getCurrentItem().getItemMeta()).getDisplayName());
+                // check if the target is not yourself.
                 if (target == player) {
                     event.setCancelled(true);
                     return;
@@ -70,6 +71,7 @@ public class guiInteraction implements Listener {
             // to check if the player is clicking on player list slot or not if they do they will teleport to the owner of the skull
             if (list.contains(event.getSlot()) && event.getCurrentItem() != null) {
                 Player target = Bukkit.getPlayer(Objects.requireNonNull(event.getCurrentItem().getItemMeta()).getDisplayName());
+                // check if the target is not yourself.
                 if (target == player) {
                     event.setCancelled(true);
                     return;
@@ -77,7 +79,6 @@ public class guiInteraction implements Listener {
                 // tpa request logic here
                 DataStore.addTpaRequest(target, player);
                 ClickMessage.sendTPA(target, player);
-//                Message.send(target, player.getName() + " send a teleport request to you");
                 // set tpa request timeout cool down.
                 Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
                     if (DataStore.getTpaRequest(target) != null) {
