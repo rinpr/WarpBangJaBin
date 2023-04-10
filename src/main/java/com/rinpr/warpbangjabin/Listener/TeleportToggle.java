@@ -27,7 +27,8 @@ public class TeleportToggle implements Listener {
                 else { user.setItemInHand(null); }
             } else if (user.getInventory().getItemInMainHand().isSimilar(fromConfig.getTPAItem())) {
                 Message.send(user, "Opening teleport request gui.");
-                new GUIhandler(user).openTPAgui();
+                new GUIhandler(user).openTPAgui(1);
+                DataStore.addCurrentPage(user, 1);
                 if (in_hand.getAmount() > 1) {
                     in_hand.setAmount(in_hand.getAmount() - 1); }
                 else { user.setItemInHand(null); }
