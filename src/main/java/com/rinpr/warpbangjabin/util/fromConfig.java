@@ -66,11 +66,19 @@ public class fromConfig {
     }
 
     /**
-     * This static method use to get Title name that show player list from config.
-     * @return Title name of player's list gui.
+     * This static method use to get teleport title name that show player list from config.
+     * @return Title name of teleport.
      */
-    public static String getPlayerTitle() {
+    public static String getTeleportTitle() {
         return plugin.getConfig().getString("player_list.title_name");
+    }
+
+    /**
+     * This static method use to get teleport ask title name that show player list from config.
+     * @return Title name of teleport ask.
+     */
+    public static String getTeleportRequestTitle() {
+        return plugin.getConfig().getString("teleport_ask_menu.title_name");
     }
 
     /**

@@ -13,7 +13,7 @@ public class ClickMessage {
         result.setColor(ChatColor.GOLD);
         result.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                 new ComponentBuilder("Click here to accept teleport").color(ChatColor.GRAY).create()));
-        result.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/debug-command tpaccept"));
+        result.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/debug-command tpagui"));
         target.spigot().sendMessage(result);
     }
 }

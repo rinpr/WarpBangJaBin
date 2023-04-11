@@ -28,13 +28,13 @@ public class GUIhandler {
      * This public method is used to open the teleport GUI for the given page.
      * @param pageNum The page number to open the GUI for.
      */
-    public void openTPgui(int pageNum) { openGUI(pageNum, fromConfig.getPlayerTitle()); }
+    public void openTPgui(int pageNum) { openGUI(pageNum, fromConfig.getTeleportTitle()); }
 
     /**
      * This public method is used to open the teleport request GUI for the given page.
      * @param pageNum The page number to open the GUI for.
      */
-    public void openTPAgui(int pageNum) { openGUI(pageNum, fromConfig.getRequestTitle()); }
+    public void openTPAgui(int pageNum) { openGUI(pageNum, fromConfig.getTeleportRequestTitle()); }
 
     /**
      * This private method is used to create the GUI with the given page number and title.
@@ -52,6 +52,13 @@ public class GUIhandler {
         for (int i = startIndex; i < endIndex; i++) {
             inv.setItem(player_slot[i - startIndex], active_player.get(i));
         }
+        player.openInventory(inv);
+    }
+    public void openRequestGUI() {
+        Inventory inv = Bukkit.createInventory(player,27, fromConfig.getRequestTitle());
+        inv.setItem(12, fromConfig.getAcceptButton());
+        inv.setItem(14, fromConfig.getDenyButton());
+//        for (int slot : space_slot) { inv.setItem(slot,fromConfig.getSpaceSlot()); }
         player.openInventory(inv);
     }
 }

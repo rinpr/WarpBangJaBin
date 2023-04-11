@@ -32,6 +32,7 @@ public class debug implements CommandExecutor {
             Message.send(commandSender, "Command Usage: /debug-command getskull,opengui,tpa,tpaccept <player>");
             return true;
         } else if (args.length == 1) {
+            Player requestor = DataStore.getTpaRequest(player);
             switch (args[0]) {
                 case "getskull":
                     new SmartGive(player).give(PlayerSkull.getPlayerSkull(player));
@@ -40,13 +41,19 @@ public class debug implements CommandExecutor {
                     new GUIhandler(player).openTPgui(1);
                     break;
                 case "tpaccept":
-                    Player requestor = DataStore.getTpaRequest(player);
                     if (requestor != null) {
                         requestor.teleport(player);
                         DataStore.removeTpaRequest(player);
                         Message.send(player, "accept tp");
                     } else {
-                        Message.send(player, "&cThere's no pending ");
+                        Message.send(player, "&cThere's no pending request.");
+                    }
+                    break;
+                case "tpagui":
+                    if (requestor != null) {
+                        new GUIhandler(player).openRequestGUI();
+                    } else {
+                        Message.send(player, "&cThere's no pending request.");
                     }
                     break;
             }

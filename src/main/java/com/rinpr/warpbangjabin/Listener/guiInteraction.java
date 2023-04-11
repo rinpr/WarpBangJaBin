@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
@@ -31,13 +32,17 @@ public class guiInteraction implements Listener {
 
         int currentPage = DataStore.getCurrentPage(player);
 
-        if (event.getClickedInventory() == null) return;
+        // if player click at their inventory or outside inventory will cancel the event
+        if (event.getClickedInventory() == null || event.getClickedInventory() == event.getWhoClicked().getInventory()) {
+            event.setCancelled(true);
+            return;
+        }
 
-        // check if the inventory is a teleport and teleport request gui.
-        if (event.getView().getTitle().equals(fromConfig.getPlayerTitle()) ||  event.getView().getTitle().equals(fromConfig.getRequestTitle())) { event.setCancelled(true); }
+        // if it's not this plugin gui it will do nothing, else will cancel every click event. (for item movable in gui safety)
+        if (event.getView().getTitle().equals(fromConfig.getTeleportTitle()) ||  event.getView().getTitle().equals(fromConfig.getTeleportRequestTitle()) || event.getView().getTitle().equals(fromConfig.getRequestTitle())) { event.setCancelled(true); }
 
         // for teleport gui
-        if (event.getView().getTitle().equals(fromConfig.getPlayerTitle())) {
+        if (event.getView().getTitle().equals(fromConfig.getTeleportTitle())) {
             // to check if the player is clicking on player list slot or not if they do they will teleport to the owner of the skull
             if (list.contains(event.getSlot()) && event.getCurrentItem() != null) {
                 Player target = Bukkit.getPlayer(Objects.requireNonNull(event.getCurrentItem().getItemMeta()).getDisplayName());
@@ -66,8 +71,8 @@ public class guiInteraction implements Listener {
                         break;
                 }
             }
-            // for teleport request gui.
-        } else if (event.getView().getTitle().equals(fromConfig.getRequestTitle())) {
+            // for teleport ask gui.
+        } else if (event.getView().getTitle().equals(fromConfig.getTeleportRequestTitle())) {
             // to check if the player is clicking on player list slot or not if they do they will teleport to the owner of the skull
             if (list.contains(event.getSlot()) && event.getCurrentItem() != null) {
                 Player target = Bukkit.getPlayer(Objects.requireNonNull(event.getCurrentItem().getItemMeta()).getDisplayName());
@@ -106,13 +111,30 @@ public class guiInteraction implements Listener {
                         break;
                 }
             }
+            // for teleport request gui
+        } else if (event.getView().getTitle().equals(fromConfig.getRequestTitle())) {
+            switch (event.getSlot()) {
+                // accept
+                case 12:
+                    player.performCommand("debug-command tpaccept");
+                    DataStore.removeTpaRequest(player);
+                    event.getWhoClicked().closeInventory();
+                    break;
+                    // decline
+                case 14:
+                    event.getWhoClicked().closeInventory();
+                    break;
+                    // other button
+                default:
+                    break;
+            }
         }
     }
 
     @EventHandler
     public void playerCloseGUI(InventoryCloseEvent event) {
-        // check if the inventory is not an ordinary one
-        if (event.getView().getTitle().equals(fromConfig.getPlayerTitle()) || event.getView().getTitle().equals(fromConfig.getRequestTitle()) || event.getView().getTitle().equals(fromConfig.getRequestTitle() + " ")) {
+        // check if the gui is teleport and teleport ask.
+        if (event.getView().getTitle().equals(fromConfig.getTeleportTitle()) || event.getView().getTitle().equals(fromConfig.getTeleportRequestTitle())) {
             DataStore.removeCurrentPage((Player) event.getPlayer());
         }
     }
