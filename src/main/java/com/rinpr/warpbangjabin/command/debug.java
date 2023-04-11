@@ -29,7 +29,7 @@ public class debug implements CommandExecutor {
         }
         Player player = (Player) commandSender;
         if (args.length == 0) {
-            Message.send(commandSender, "Command Usage: /debug-command getskull,opengui,tpa,tpaccept <player>");
+            Message.send(commandSender, "&cYou have no permission to use this command!");
             return true;
         } else if (args.length == 1) {
             Player requestor = DataStore.getTpaRequest(player);
