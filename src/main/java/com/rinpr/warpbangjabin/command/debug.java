@@ -1,6 +1,6 @@
 package com.rinpr.warpbangjabin.command;
 
-import com.rinpr.warpbangjabin.util.TpaRequestStore;
+import com.rinpr.warpbangjabin.util.DataStore;
 import com.rinpr.warpbangjabin.WarpBangJaBin;
 import com.rinpr.warpbangjabin.gui.GUIhandler;
 import com.rinpr.warpbangjabin.util.Message;
@@ -40,10 +40,10 @@ public class debug implements CommandExecutor {
                     new GUIhandler(player).openTPgui(1);
                     break;
                 case "tpaccept":
-                    Player requestor = TpaRequestStore.getTpaRequest(player);
+                    Player requestor = DataStore.getTpaRequest(player);
                     if (requestor != null) {
                         requestor.teleport(player);
-                        TpaRequestStore.removeTpaRequest(player);
+                        DataStore.removeTpaRequest(player);
                         Message.send(player, "accept tp");
                     } else {
                         Message.send(player, "&cThere's no pending ");
@@ -53,10 +53,11 @@ public class debug implements CommandExecutor {
         } else if (args.length == 2) {
             if (args[0].equals("tpa")) {
                 Player target = Bukkit.getPlayer(args[1]);
-                TpaRequestStore.addTpaRequest(target, player);
+                DataStore.addTpaRequest(target, player);
                 Message.send(target, player.getName() + " wants to tp to you");
                 Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                    TpaRequestStore.removeTpaRequest(target);
+                    DataStore.removeTpaRequest(target);
+                    Message.send(target, "&cYour teleport request timed out!");
                 }, 20L * fromConfig.getRequestKeepalive());
             }
         }
