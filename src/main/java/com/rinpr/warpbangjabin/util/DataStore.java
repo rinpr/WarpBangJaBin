@@ -89,6 +89,13 @@ public class DataStore {
     public static boolean getIsMove(Player player) { return isMove.get(player); }
 
     /**
+     * This static method use to check if given player has a key in isMove map or not.
+     * @param player You wanted to check if they have a key or not.
+     * @return true if there's a key , else false.
+     */
+    public static boolean containsKey(Player player) { return isMove.containsKey(player); }
+
+    /**
      * This static method use to update player's isMove boolean to global variable.
      * @param player whom you want to update a isMove boolean data.
      * @param isPlayerMove true if player is moved, false if not.
