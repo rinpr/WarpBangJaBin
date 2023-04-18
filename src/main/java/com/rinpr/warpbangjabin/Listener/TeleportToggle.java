@@ -19,14 +19,12 @@ public class TeleportToggle implements Listener {
         ItemStack in_hand = event.getItem();
         if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && in_hand != null) {
             if (user.getInventory().getItemInMainHand().isSimilar(fromConfig.getTPItem())) {
-                Message.send(user, "Opening teleport gui.");
                 new GUIhandler(user).openTPgui(1);
                 DataStore.addCurrentPage(user, 1);
                 if (in_hand.getAmount() > 1) {
                     in_hand.setAmount(in_hand.getAmount() - 1); }
                 else { user.setItemInHand(null); }
             } else if (user.getInventory().getItemInMainHand().isSimilar(fromConfig.getTPAItem())) {
-                Message.send(user, "Opening teleport request gui.");
                 new GUIhandler(user).openTPAgui(1);
                 DataStore.addCurrentPage(user, 1);
                 if (in_hand.getAmount() > 1) {

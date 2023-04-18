@@ -13,6 +13,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -42,9 +43,28 @@ public class debug implements CommandExecutor {
                     break;
                 case "tpaccept":
                     if (requestor != null) {
-                        requestor.teleport(player);
-                        DataStore.removeTpaRequest(player);
-                        Message.send(player, "accept tp");
+                        // Add a delay of 3 seconds before teleporting the player
+                        int delay = 3;
+                        Message.send(requestor, "Teleporting in " + delay + " seconds. Don't move!");
+                        DataStore.setIsMove(requestor);
+
+                        // Schedule a task to teleport the player after the delay
+                        BukkitTask task = Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                            // Check if the player has moved during the delay period
+                            if (!DataStore.getIsMove(requestor)) {
+                                requestor.teleport(player);
+                                DataStore.removeTpaRequest(player);
+                                Message.send(requestor, "Teleported to " + player.getName());
+                            } else {
+                                Message.send(requestor, "Teleportation cancelled: You moved.");
+                            }
+                            // Remove the move check flag and teleportation task for the player
+                            DataStore.removeIsMove(requestor);
+                            DataStore.removeTpTask(requestor);
+                        }, delay * 20L); // Convert seconds to ticks
+
+                        // Associate the task with the player in the DataStore
+                        DataStore.setTpTask(requestor, task);
                     } else {
                         Message.send(player, "&cThere's no pending request.");
                     }

@@ -1,5 +1,6 @@
 package com.rinpr.warpbangjabin;
 
+import com.rinpr.warpbangjabin.Listener.MovementCheck;
 import com.rinpr.warpbangjabin.Listener.TeleportToggle;
 import com.rinpr.warpbangjabin.Listener.guiInteraction;
 import com.rinpr.warpbangjabin.command.GiveItem;
@@ -35,6 +36,7 @@ public final class WarpBangJaBin extends JavaPlugin {
     private void RegisterListener() {
         Bukkit.getPluginManager().registerEvents(new guiInteraction(), this);
         Bukkit.getPluginManager().registerEvents(new TeleportToggle(), this);
+        Bukkit.getPluginManager().registerEvents(new MovementCheck(), this);
     }
 
     @Override

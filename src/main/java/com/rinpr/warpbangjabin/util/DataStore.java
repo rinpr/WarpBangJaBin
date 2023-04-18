@@ -1,6 +1,7 @@
 package com.rinpr.warpbangjabin.util;
 
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +22,7 @@ public class DataStore {
      * Store player's isMove boolean.
      */
     private static Map<Player, Boolean> isMove = new HashMap<>();
+    private static Map<Player, BukkitTask> tpTask = new HashMap<>();
 
     /**
      * This static method use to add tpa request to global variables.
@@ -71,9 +73,8 @@ public class DataStore {
     /**
      * This static method use to add player's isMove boolean to global variable.
      * @param player whom you want to store a isMove boolean data.
-     * @param isPlayerMove true if player is moved, false if not.
      */
-    public static void addIsMove(Player player, Boolean isPlayerMove) { isMove.put(player, isPlayerMove); }
+    public static void setIsMove(Player player) { isMove.put(player, false); }
 
     /**
      * This static method use to remove player's isMove boolean to global variable.
@@ -98,7 +99,12 @@ public class DataStore {
     /**
      * This static method use to update player's isMove boolean to global variable.
      * @param player whom you want to update a isMove boolean data.
-     * @param isPlayerMove true if player is moved, false if not.
      */
-    public static void updateCurrentPage(Player player, Boolean isPlayerMove) { isMove.replace(player, isPlayerMove); }
+    public static void updateIsMove(Player player) { isMove.replace(player, true); }
+
+    public static void setTpTask(Player player, BukkitTask task) { tpTask.put(player, task); }
+
+    public static BukkitTask getTpTask(Player player) { return tpTask.get(player); }
+
+    public static void removeTpTask(Player player) { tpTask.remove(player); }
 }
