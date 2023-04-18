@@ -32,14 +32,14 @@ public class guiInteraction implements Listener {
 
         int currentPage = DataStore.getCurrentPage(player);
 
-        // if player click at their inventory or outside inventory will cancel the event
-        if (event.getClickedInventory() == null || event.getClickedInventory() == event.getWhoClicked().getInventory()) {
-            event.setCancelled(true);
-            return;
-        }
-
         // if it's not this plugin gui it will do nothing, else will cancel every click event. (for item movable in gui safety)
-        if (event.getView().getTitle().equals(fromConfig.getTeleportTitle()) ||  event.getView().getTitle().equals(fromConfig.getTeleportRequestTitle()) || event.getView().getTitle().equals(fromConfig.getRequestTitle())) { event.setCancelled(true); }
+        if (event.getView().getTitle().equals(fromConfig.getTeleportTitle()) ||  event.getView().getTitle().equals(fromConfig.getTeleportRequestTitle()) || event.getView().getTitle().equals(fromConfig.getRequestTitle())) {
+            event.setCancelled(true);
+            // if player click at their inventory or outside inventory will cancel the event
+            if (event.getClickedInventory() == null || event.getClickedInventory() == event.getWhoClicked().getInventory()) {
+                event.setCancelled(true);
+            }
+        }
 
         // for teleport gui
         if (event.getView().getTitle().equals(fromConfig.getTeleportTitle())) {
